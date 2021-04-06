@@ -6,3 +6,8 @@
 *.pyc
 *.bak
 .vscode/
+
+# ROS build files
+/build
+/install
+/log
