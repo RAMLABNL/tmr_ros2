@@ -68,6 +68,8 @@ public:
 	bool set_pause(const std::string &id = "Pause");
 	bool set_resume(const std::string &id = "Resume");
 
+	bool set_project_speed(int speed, const std::string &id = "ProjectSpeed");
+
 	//enum class IOModule { ControlBox, EndEffector };
 	//enum class IOType { DI, DO, InstantDO, AI, AO, InstantAO };
 	bool set_io(IOModule module, IOType type, int pin, float state, const std::string &id = "io");

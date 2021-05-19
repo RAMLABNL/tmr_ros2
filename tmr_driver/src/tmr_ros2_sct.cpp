@@ -50,7 +50,9 @@ TmSctRos2::TmSctRos2(const rclcpp::NodeOptions &options, tmr::Driver &iface, boo
     set_positions_srv_ = create_service<tmr_msgs::srv::SetPositions>(
       "tmr/set_positions", std::bind(&TmSctRos2::set_positions, this,
       std::placeholders::_1, std::placeholders::_2));
-
+    set_pvt_positions_srv_ = create_service<tmr_msgs::srv::SetPVTPositions>(
+      "tmr/set_pvt_positions", std::bind(&TmSctRos2::set_pvt_positions, this,
+      std::placeholders::_1, std::placeholders::_2));
     ask_sta_srv_ = create_service<tmr_msgs::srv::AskSta>(
       "tmr/ask_sta", std::bind(&TmSctRos2::ask_sta, this,
       std::placeholders::_1, std::placeholders::_2));
@@ -281,6 +283,22 @@ bool TmSctRos2::set_event(
   case tmr_msgs::srv::SetEvent_Request::RESUME:
     rb = iface_.set_resume();
     break;
+  case tmr_msgs::srv::SetEvent_Request::PVT_ENTER_JOINT:
+    rb = iface_.set_pvt_enter(tmr::PvtMode::Joint);
+    break;
+  case tmr_msgs::srv::SetEvent_Request::PVT_ENTER_TOOL:
+    rb = iface_.set_pvt_enter(tmr::PvtMode::Tool);
+    break;
+  case tmr_msgs::srv::SetEvent_Request::PVT_EXIT:
+    rb = iface_.set_pvt_exit();
+    break;
+  // case tmr_msgs::srv::SetEvent_Request::PVT_PAUSE:
+  //  rb = iface_.set_pvt_pause();
+  //  break;
+  // case tmr_msgs::srv::SetEvent_Request::PVT_RESUME:
+  //   rb = iface_.set_pvt_resume();
+  //   break;
+ 
   }
   res->ok = rb;
   return rb;
@@ -308,6 +326,22 @@ bool TmSctRos2::set_positions(
   case tmr_msgs::srv::SetPositions_Request::LINE_T:
     rb = iface_.set_tool_pose_Line(req->positions, req->velocity, req->acc_time, req->blend_percentage, req->fine_goal);
     break;
+  }
+  res->ok = rb;
+  return rb;
+}
+
+bool TmSctRos2::set_pvt_positions(
+    const std::shared_ptr<tmr_msgs::srv::SetPVTPositions::Request> req,
+    std::shared_ptr<tmr_msgs::srv::SetPVTPositions::Response> res)
+{
+  bool rb = true;
+  auto mode = convert_pvt_mode(req->mode);
+  for(auto const& p: req->positions) {
+    rb = iface_.set_pvt_point(mode, p.duration, p.position, p.velocity);
+    if (!rb) {
+      rb = false;
+    }
   }
   res->ok = rb;
   return rb;
@@ -577,4 +611,32 @@ std::shared_ptr<tmr::PvtTraj> TmSctRos2::get_pvt_traj(
   std::shared_ptr<tmr::PvtTraj> pvts = std::make_shared<tmr::PvtTraj>();
   set_pvt_traj(*pvts, traj_points, Tmin);
   return pvts;
+}
+tmr::PvtMode TmSctRos2::convert_pvt_mode(int8_t mode)
+{
+  switch(mode)
+  {
+  case tmr_msgs::srv::SetPVTPositions_Request::JOINT:
+    return tmr::PvtMode::Joint;
+    break;
+  case tmr_msgs::srv::SetPVTPositions_Request::TOOL:
+    return tmr::PvtMode::Tool;
+    break;
+  default:
+    return tmr::PvtMode::Joint;
+  }
+}
+int8_t TmSctRos2::convert_pvt_mode(tmr::PvtMode mode)
+{
+  switch (mode)
+  {
+  case tmr::PvtMode::Joint:
+    return tmr_msgs::srv::SetPVTPositions_Request::JOINT;
+    break;
+  case tmr::PvtMode::Tool:
+    return tmr_msgs::srv::SetPVTPositions_Request::TOOL;
+  default:
+    return tmr_msgs::srv::SetPVTPositions_Request::JOINT;
+    break;
+  }
 }

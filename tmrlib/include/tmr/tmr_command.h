@@ -96,6 +96,10 @@ public:
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.5 */
 	static std::string set_resume() { return "Resume()"; }
 
+/*	Setting project speed.
+	More details please refer to the TM_Robot_Expression.pdf and Receive/Send Data Table Settings */
+	static std::string set_project_speed(int speed);
+
 /*	Triggering IO high/low.
 	IOModule type: ControlBox, EndEffector 
 	IOType   type: DI, DO, InstantDO, AI, AO, InstantAO 

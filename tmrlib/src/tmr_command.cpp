@@ -22,6 +22,12 @@ std::string Command::set_wait_tag(int tag, int timeout_ms)
 	ss << "WaitQueueTag(" << tag << "," << timeout_ms << ")";
 	return ss.str();
 }
+std::string Command::set_project_speed(int speed)
+{
+	std::stringstream ss;
+	ss << "svr_write(\"Project_Speed\"," << speed << ")";
+	return ss.str();	
+}
 std::string Command::set_io(IOModule module, IOType type, int pin, float state)
 {
 	static std::string io_module_name[] = { "ControlBox", "EndModule" };

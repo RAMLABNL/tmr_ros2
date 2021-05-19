@@ -100,6 +100,11 @@ bool Driver::set_resume(const std::string &id)
 {
 	return (sct.send_script_str(id, Command::set_resume()) == RC_OK);
 }
+bool Driver::set_project_speed(int speed, const std::string &id)
+{
+	return (sct.send_script_str(id, Command::set_project_speed(speed)) == RC_OK);
+}
+
 bool Driver::set_io(IOModule module, IOType type, int pin, float state, const std::string &id)
 {
 	return (sct.send_script_str(id, Command::set_io(module, type, pin, state)) == RC_OK);

@@ -40,6 +40,7 @@ set(msg_files
   "msg/SvrResponse.msg"
   "msg/SctResponse.msg"
   "msg/StaResponse.msg"
+  "msg/PvtPosition.msg"
 )
 set(srv_files
   "srv/ConnectTM.srv"
@@ -49,6 +50,7 @@ set(srv_files
   "srv/SetEvent.srv"
   "srv/SetIO.srv"
   "srv/SetPositions.srv"
+  "srv/SetPVTPositions.srv"
   "srv/AskSta.srv"
 )
 

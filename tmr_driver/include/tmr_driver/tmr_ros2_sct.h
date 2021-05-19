@@ -18,6 +18,7 @@
 #include "tmr_msgs/srv/set_io.hpp"
 //#include "tmr_msgs/srv/set_payload.hpp"
 #include "tmr_msgs/srv/set_positions.hpp"
+#include "tmr_msgs/srv/set_pvt_positions.hpp"
 #include "tmr_msgs/srv/ask_sta.hpp"
 
 
@@ -57,6 +58,7 @@ public:
   rclcpp::Service<tmr_msgs::srv::SetEvent>::SharedPtr set_event_srv_;
   rclcpp::Service<tmr_msgs::srv::SetIO>::SharedPtr set_io_srv_;
   rclcpp::Service<tmr_msgs::srv::SetPositions>::SharedPtr set_positions_srv_;
+  rclcpp::Service<tmr_msgs::srv::SetPVTPositions>::SharedPtr set_pvt_positions_srv_;
 
   rclcpp::Service<tmr_msgs::srv::AskSta>::SharedPtr ask_sta_srv_;
 
@@ -92,7 +94,9 @@ public:
   bool set_positions(
     const std::shared_ptr<tmr_msgs::srv::SetPositions::Request> req,
     std::shared_ptr<tmr_msgs::srv::SetPositions::Response> res);
-
+  bool set_pvt_positions(
+    const std::shared_ptr<tmr_msgs::srv::SetPVTPositions::Request> req,
+    std::shared_ptr<tmr_msgs::srv::SetPVTPositions::Response> res);
   bool ask_sta(
     const std::shared_ptr<tmr_msgs::srv::AskSta::Request> req,
     std::shared_ptr<tmr_msgs::srv::AskSta::Response> res);
@@ -125,4 +129,6 @@ protected:
   std::shared_ptr<tmr::PvtTraj> get_pvt_traj(
     const std::vector<trajectory_msgs::msg::JointTrajectoryPoint> &traj_points, double Tmin = 0.1
   );
+  tmr::PvtMode convert_pvt_mode(int8_t mode);
+  int8_t convert_pvt_mode(tmr::PvtMode mode);
 };
