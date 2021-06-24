@@ -82,7 +82,7 @@ std::string Command::set_tool_pose_Line(const std::vector<double> &pose,
 	int acct_ms = int(1000.0 * acc_time);
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(precision);
-	ss << "Line(\"CAP\",";
+	ss << "Line(\"CAR\",";
 	for (auto &value : pose_mmdeg) { ss << value << ","; }
 	ss << vel_mm << "," << acct_ms << "," << blend_percent << ",";
 	ss << std::boolalpha <<fine_goal << ")";
