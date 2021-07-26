@@ -45,6 +45,7 @@ TmRos2Node::TmRos2Node(const std::string &host) : Node("tm_driver")
     //auto send_script_srv_ = this->create_service()
 
 }
+
 TmRos2Node::~TmRos2Node()
 {
     if (pub_thread_.joinable()) pub_thread_.join();
@@ -59,6 +60,7 @@ void TmRos2Node::publish_msg()
     pm_.joint_pub->publish(pm_.joint_msg);
 
 }
+
 void TmRos2Node::publisher()
 {
     print_info("TM_ROS: publisher thread begin");
@@ -80,7 +82,7 @@ void TmRos2Node::publisher()
             default: break;
             }
         }
-        iface_.svr.Close();
+        iface_.svr.close_socket();
         print_info("TM_ROS: (TM_SVR) reconnect in ");
         int cnt = 5;
         while (rclcpp::ok() && cnt > 0) {
@@ -90,10 +92,10 @@ void TmRos2Node::publisher()
         }
         if (rclcpp::ok()) {
             print_info("TM_ROS: (TM_SVR) connect...");
-            iface_.svr.Connect(1000);
+            iface_.svr.connect_socket(1000);
         }
     }
-    iface_.svr.Close();
+    iface_.svr.close_socket();
     print_info("TM_ROS: publisher thread end");
 }
 
