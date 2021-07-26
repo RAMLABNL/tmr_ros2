@@ -41,11 +41,7 @@ include_directories(include
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(tm_driver
-  #src/tm_ros2_node.cpp
-  src/tm_ros2_composition.cpp
-  src/tm_ros2_sct.cpp
-  src/tm_ros2_svr.cpp
+add_library(tm_driver
   src/tm_driver.cpp
   src/tm_command.cpp
   src/tm_sct_communication.cpp
@@ -55,15 +51,6 @@ add_executable(tm_driver
   src/tm_packet.cpp
   src/tm_print.cpp
 )
-#add_executable(tm_driver_srv
-#  src/tm_ros2_service.cpp
-#  src/tm_command.cpp
-#  src/tm_sct_communication.cpp
-#  src/tm_communication.cpp
-#  src/tm_robot_state.cpp
-#  src/tm_packet.cpp
-#  src/tm_print.cpp
-#)
 
 ament_target_dependencies(tm_driver
   rclcpp
@@ -72,14 +59,20 @@ ament_target_dependencies(tm_driver
   tm_msgs
 )
 
-install(TARGETS
-  tm_driver
-  DESTINATION lib/${PROJECT_NAME}
-)
+ament_export_interfaces(export_tm_driver HAS_LIBRARY_TARGET)
 
 install(
-  DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
+  DIRECTORY include/
+  DESTINATION include
+)
+
+install(TARGETS
+  tm_driver
+  EXPORT export_tm_driver
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
 ament_package()
