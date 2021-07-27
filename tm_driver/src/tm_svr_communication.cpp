@@ -21,19 +21,20 @@ TmSvrCommunication::TmSvrCommunication(const std::string &ip,
 		_has_thread = true;
 	}
 }
+
 TmSvrCommunication::~TmSvrCommunication()
 {
 	halt();
 }
 
-bool TmSvrCommunication::start(int timeout_ms)
+bool TmSvrCommunication::start_tm_svr(int timeout_ms)
 {
 	if (socket_description() == 6188)
 	{
 		print_info("TM_SVR: start (fake)");
 		if (_has_thread) {
 			// start thread
-			_recv_thread = std::thread(std::bind(&TmSvrCommunication::thread_function, this));
+			_recv_thread = std::thread(std::bind(&TmSvrCommunication::tm_svr_thread_function, this));
 		}
 		return true;
 	}
@@ -41,15 +42,16 @@ bool TmSvrCommunication::start(int timeout_ms)
 	halt();
 	print_info("TM_SVR: start");
 
-	bool rb = Connect(timeout_ms);
+	bool rb = connect_socket(timeout_ms);
 	//if (!rb) return rb; // ? start thread anyway
 
 	if (_has_thread) {
 		// start thread
-		_recv_thread = std::thread(std::bind(&TmSvrCommunication::thread_function, this));
+		_recv_thread = std::thread(std::bind(&TmSvrCommunication::tm_svr_thread_function, this));
 	}
 	return rb;
 }
+
 void TmSvrCommunication::halt()
 {
 	if (socket_description() == 6188)
@@ -77,7 +79,7 @@ void TmSvrCommunication::halt()
 		//		_recv_thread.join();
 		//	}
 		//}
-		Close();
+		close_socket();
 	}
 }
 
@@ -88,6 +90,7 @@ TmCommRC TmSvrCommunication::send_content(const std::string &id, TmSvrData::Mode
 	TmPacket pack{ cmd };
 	return send_packet_all(pack);
 }
+
 TmCommRC TmSvrCommunication::send_content_str(const std::string &id, const std::string &content)
 {
 	std::string cntt = content;
@@ -95,12 +98,13 @@ TmCommRC TmSvrCommunication::send_content_str(const std::string &id, const std::
 	TmPacket pack{ cmd };
 	return send_packet_all(pack);
 }
+
 TmCommRC TmSvrCommunication::send_stick_play()
 {
 	return send_content_str("Play", "Stick_PlayPause=1");
 }
 
-void TmSvrCommunication::thread_function()
+void TmSvrCommunication::tm_svr_thread_function()
 {
 	print_info("TM_SVR: thread begin");
 	_keep_thread_alive = true;
@@ -118,18 +122,20 @@ void TmSvrCommunication::thread_function()
 			case TmCommRC::ERR:
 			case TmCommRC::NOTREADY:
 			case TmCommRC::NOTCONNECT:
+			case TmCommRC::TIMEOUT:
 				print_info("TM_SVR: rc=%d", int(rc));
 				reconnect = true;
 				break;
 			default: break;
 			}
 		}
-		Close();
+		close_socket();
 		reconnect_function();
 	}
-	Close();
+	close_socket();
 	print_info("TM_SVR: thread end");
 }
+
 void TmSvrCommunication::reconnect_function()
 {
 	if (!_keep_thread_alive) return;
@@ -147,9 +153,10 @@ void TmSvrCommunication::reconnect_function()
 	}
 	if (_keep_thread_alive && _reconnect_timeval_ms >= 0) {
 		print_info("0 sec\nTM_SVR: connect(%dms)...", _reconnect_timeout_ms);
-		Connect(_reconnect_timeout_ms);
+		connect_socket(_reconnect_timeout_ms);
 	}
 }
+
 TmCommRC TmSvrCommunication::tmsvr_function()
 {
 	TmCommRC rc;
@@ -162,13 +169,12 @@ TmCommRC TmSvrCommunication::tmsvr_function()
 
 	for (auto &pack : pack_vec) {
 		if (pack.type == TmPacket::Header::CPERR) {
-			print_info("TM_SVR: CPERR");
-			err_data.set_CPError(pack.data.data(), pack.data.size());
-			print_error(err_data.error_code_str().c_str());
+			tmSvrErrData.set_CPError(pack.data.data(), pack.data.size());
+            print_error("TM_SVR: CPERR %s",tmSvrErrData.error_code_str().c_str());
 		}
 		else if (pack.type == TmPacket::Header::TMSVR) {
 			
-			err_data.error_code(TmCPError::Code::Ok);
+			tmSvrErrData.error_code(TmCPError::Code::Ok);
 
 			TmSvrData::build_TmSvrData(data, pack.data.data(), pack.data.size(), TmSvrData::SrcType::Shallow);
 			
@@ -186,16 +192,16 @@ TmCommRC TmSvrCommunication::tmsvr_function()
 						std::string(data.content(), data.content_len()).c_str());
 					break;
 				default:
-					print_info("TM_SVR: (%s): invalid mode (%d)", data.transaction_id().c_str(), (int)(data.mode()));
+					print_error("TM_SVR: (%s): invalid mode (%d)", data.transaction_id().c_str(), (int)(data.mode()));
 					break;
 				}
 			}
 			else {
-				print_info("TM_SVR: invalid data");
+				print_error("TM_SVR: invalid data");
 			}
 		}
 		else {
-			print_info("TM_SVR: invalid header");
+			print_error("TM_SVR: invalid header");
 		}
 	}
 	return rc;

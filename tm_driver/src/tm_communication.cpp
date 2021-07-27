@@ -249,6 +249,7 @@ TmCommunication::TmCommunication(const char *ip, unsigned short port, int recv_b
 	, _port(port)
 	, _recv_buf_len(recv_buf_len)
 	, _sockfd(-1)
+	, _isConnected(false)
 	, _optflag(1)
 	, _recv_rc(TmCommRC::OK)
 	, _recv_ready(false)
@@ -285,7 +286,11 @@ TmCommunication::~TmCommunication()
 	WSACleanup();
 #endif
 }
-
+uint64_t TmCommunication::get_current_time_in_ms(){
+	std::chrono::system_clock::time_point tp = std::chrono::system_clock::now(); 
+	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch());
+    return ms.count();
+}
 int TmCommunication::connect_with_timeout(int sockfd, const char *ip, unsigned short port, int timeout_ms)
 {
 	int rv = 0;
@@ -360,8 +365,9 @@ int TmCommunication::connect_with_timeout(int sockfd, const char *ip, unsigned s
 	return rv;
 }
 
-bool TmCommunication::Connect(int timeout_ms)
+bool TmCommunication::connect_socket(int timeout_ms)
 {
+	_isConnected = false;
 	if (_sockfd > 0) return true;
 
 	if (timeout_ms < 0) timeout_ms = 0;
@@ -373,10 +379,11 @@ bool TmCommunication::Connect(int timeout_ms)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_HOPOPTS;
 
-	_sockfd = socket(hints.ai_family, hints.ai_socktype, hints.ai_protocol);
+	socketFile = socket(hints.ai_family, hints.ai_socktype, hints.ai_protocol);
 #else
-	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	socketFile = socket(AF_INET, SOCK_STREAM, 0);
 #endif
+    _sockfd = socketFile;
 	if (_sockfd < 0) {
 		print_error("TM_COM: Error socket");
 		return false;
@@ -403,10 +410,12 @@ bool TmCommunication::Connect(int timeout_ms)
 
 	if (connect_with_timeout(_sockfd, _ip, _port, timeout_ms) == 0) {
 		print_info("TM_COM: O_NONBLOCK connection is ok");
+		_isConnected = true;
 	}
 	else {
 		print_info("TM_COM: O_NONBLOCK connection is fail");
 		_sockfd = -1;
+		_isConnected = false;
 	}
 	if (_sockfd > 0) {
 		print_info("TM_COM: TM robot is connected. sockfd:=%d", _sockfd);
@@ -418,17 +427,17 @@ bool TmCommunication::Connect(int timeout_ms)
 	}
 }
 
-void TmCommunication::Close()
+void TmCommunication::close_socket()
 {
+	_isConnected = false;
 	// reset
 	_recv_rc = TmCommRC::OK;
 	_recv_ready = false;
 
-	if (_sockfd <= 0) return;
 #ifdef _WIN32
-	closesocket((SOCKET)_sockfd);
+	closesocket((SOCKET)socketFile);
 #else
-	close(_sockfd);
+	close(socketFile);
 #endif
 	_sockfd = -1;
 }

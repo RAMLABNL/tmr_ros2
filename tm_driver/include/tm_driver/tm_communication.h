@@ -1,7 +1,7 @@
 #pragma once
 #include "tm_packet.h"
 //#include "tm_robot_state.h"
-
+#include <iostream>
 #include <chrono>
 #include <thread>
 #include <condition_variable>
@@ -27,6 +27,8 @@ private:
 	unsigned short _port;
 	int _recv_buf_len;
 	int _sockfd;
+	int _isConnected;
+	int socketFile;
 	int _optflag;
 	TmCommRC _recv_rc;
 	bool _recv_ready;
@@ -43,11 +45,16 @@ public:
 	int socket_description() { return _sockfd; }
 	int socket_description(int sockfd) { _sockfd = sockfd; return _sockfd; }
 
-	bool is_connected() { return (_sockfd > 0); }
+	bool is_connected() {
+		if(_sockfd<0){
+			_isConnected = false;
+		}
+		return _isConnected;
+	}
 
-	bool Connect(int timeout_ms = 0);
+	bool connect_socket(int timeout_ms = 0);
 
-	void Close();
+	void close_socket();
 
 	TmCommRC send_bytes(const char *bytes, int len, int *n = NULL);
 
@@ -68,6 +75,8 @@ public:
 	std::vector<TmPacket> &packet_list() { return _packet_list; }
 
 	TmPacket &packet() { return _packet_list.back(); }
+
+	static uint64_t get_current_time_in_ms();
 
 private:
 	int connect_with_timeout(int sockfd, const char *ip, unsigned short port, int timeout_ms);

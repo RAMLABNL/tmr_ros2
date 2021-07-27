@@ -268,11 +268,11 @@ The user can use service named "send_script" to send script.<br/>
 >
 > * demo_ask_item:<br/>
 In this demo code, the user can use this service to send TMSCT <sup>2</sup> cmd.<br/> 
-> <sup>2</sup>  More details please refer to _defined protocol_: Expression Editor and Listen Node.pdf (Chapter7.4 TMSCT)<br/>
+> <sup>2</sup> For more detailed information, please refer to _defined protocol_: Expression Editor and Listen Node.pdf (Chapter7.4 TMSCT)<br/>
 >
 > * demo_ask_sta:<br/>
 In this demo code, the user can use this service to send TMSTA <sup>3</sup> cmd.<br/>
-> <sup>3</sup> More details please refer to _defined protocol_ (Chapter7.5 TMSTA)<br/>
+> <sup>3</sup> For more detailed information, please refer to _defined protocol_ (Chapter7.5 TMSTA)<br/>
 > * demo_connect_tm:<br/>
 In this demo code, the user can set the connection type. <br/>
 If the user sets reconnect to true, every time the driver disconnects from the __Listen node__, it will try to reconnect.<br/>
@@ -289,8 +289,8 @@ In this demo code, the user should set module, type, pin and state. <sup>4</sup>
 module &rarr;  MODULE_CONTROLBOX or MODULE_ENDEFFECTOR<br/>
 type &rarr;  TYPE_DIGITAL_IN, TYPE_DIGITAL_OUT, TYPE_INSTANT_DO, TYPE_ANALOG_IN, TYPE_ANALOG_OUT, TYPE_INSTANT_AO<br/>
 pin &rarr;  pin number<br/>
-state &rarr;  STATE_OFF or STATE_ON value, or other value (if type expressed in analog control module)<br/>
-> <sup>4</sup> More details please refer to _defined protocol_ (Chapter6.5 IO)<br/>
+state &rarr;  STATE_OFF or STATE_ON value, or other value (if type expressed in a specific control module)<br/>
+> <sup>4</sup> For more detailed information, please refer to _defined protocol_ (Chapter6.5 IO)<br/>
 >
 > * demo_set_positions:<br/>
 In this demo code, the user should pay attention to the parameter definition of the data format setting <sup>5</sup> and the unit of the parameter to be operated.  <br/>
@@ -300,15 +300,16 @@ velocity &rarr;  motion velocity: if expressed in Cartesian coordinate (unit: m/
 acc_time &rarr; time to reach maximum speed (unit: ms)<br/> 
 blend_percentage &rarr; blending value: expressed as a percentage (unit: %, and the minimum value of 0 means no blending) <br/>
 fine_goal &rarr; precise position mode : If activated, the amount of error in the final position will converge more, but it will take a few more milliseconds.<br/>
-> <sup>5</sup>  More details please refer to _defined protocol_ (Chapter8 PTP, Line, Circle, Pline, Move_PTP, Move_Line, Move_PLine) <br/>
+> <sup>5</sup> For more detailed information, please refer to _defined protocol_ (Chapter8 PTP, Line, Circle, Pline, Move_PTP, Move_Line, Move_PLine) <br/>
 > <sup>6</sup> The unit of the parameters are different, the user can find the conversion in the program of TM ROS driver.<br/>
 >
 > * demo_write_item: <br/>
 In this demo code, the user can use this service to send TMSVR <sup>7</sup> cmd. <br/>
-> <sup>7</sup> More details please refer to _defined protocol_ (Chapter9.3 svr_write())<br/>
+> <sup>7</sup> For more detailed information, please refer to _defined protocol_ (Chapter9.3 svr_write())<br/>
 >
 > * demo_leave_listen_node:<br/>
-In this demo code, the user can use send_script service sending a script to leave the __Listen node__.
+In this demo code, the user can use send_script service sending a script to leave the __Listen node__.<br/>
+> :bulb: If the user has sent the demo_leave_listen_node script to leave the __Listen node__, and you want to run the TM Robot again, please remember that the _Listen task_ project should be resumed to run. You can press the Stop Button on the Robot Stick and then press the Play/Pause Button to resume operation. <br/>
 
 
 ### &sect; __Usage with demo code & driver__
@@ -340,13 +341,19 @@ The GUI displays tm_driver connection status, sct, sta, svr messages and robot s
 
 
 ### &sect; GUI Debugging description
-> * If ``is_srv_connect`` and ``is_sct_connect`` are true, it means that all connection is success.<br/>
-> * If ``is_srv_connect`` is false, the user should check whether the data table is correct.<br/>
-> * If ``is_sct_connect`` is false, the user should check whether the project is running.<br/>
-> * If ``is_srv_connect`` and ``is_sct_connect`` are true, and the ``robot link`` is false, it means that the driver has connected to the TM project, but the __Listen node__ of TMflow is not started normally. Therefore, when the user send the move command, it does not work.<br/>
-> * When the user send a command or click ``"change control box IO"``,  the user will see a response item embedded in the ``Robot Response``. For details of this item, please refer to ``SctResponse.msg``, ``StaResponse.msg`` and ``SvrResponse.msg``.<br/>
-> * The user can click ``"clear"`` to clear the old response items.<br/>
-> * If the user forget to run the ``tm_ros_driver``, the user will see all items displayed as ``"Not ini"``.<br/>
+> * If the user forgets to run the TM ROS driver, the user will see all the controlled label items of the GUI are displayed as "NaN".<br/>
+> * The user can click "``Quit_GUI``" button or click the "``x``" close button in the upper right corner to close this GUI.<br/>
+> * If "``Ethernet``" and "``Listen Node``" connection display are "on", it means that ROS SvrClient and SctClient are successfully connected.<br/>
+> * If "``Ethernet``" connection display is is "off", the user should check whether the TM Robot has been started or whether the network settings are correct.<br/>
+> * If "``Listen Node``" connection is "off", the user should check whether the task project is running.<br/>
+> :bulb: If "``Listen Node``" connection is interrupted as "``Project_Run``" is stopped, the "``Listen Node``" connection will be "off". <br/>
+> * If both "``Ethernet``" and "``Listen Node``" connection display  are "on", but the "``Robot_Link``" is false or "``Robot_Error``" is true; this means the robot is working abnormally, or maybe the ESTOP button was pressed or or some kind of protection or error <sup>1</sup> occurred. Therefore, when the user sends a move script command at this time, it will not work.<br/> 
+> <sup>1</sup> For more detailed information, please refer to the TM Robot User Guide.<br/> 
+> * The user can use the self-developed script to read/write project data through communication protocols to control the TM Robot. If it does not work properly, the user can quickly determine whether there is a communication error code by viewing the "``Response ROS Node Status``" display.<br/>
+> * When the user sends a command or clicks DO0 Ctrl "``H/L``" button of Control_Box, the user also can see the response message <sup>2</sup> embedded in the "``Robot Response``" item view.<br/>
+> <sup>2</sup> For details of this item, please refer to __SctResponse.msg__, __StaResponse.msg__ and __SvrResponse.msg__ of TM ROS driver code.<br/>
+> * The user can click "``clear``" button to clear the old response message.<br/>
+> :bulb: If "``Ethernet``" connection is interrupted, the display of most controlled label items in the GUI will be displayed as "NaN" and the robot feedback state will remain the last state and become invalid.<br/>
 
 
 ### &sect; Usage with GUI debugging
