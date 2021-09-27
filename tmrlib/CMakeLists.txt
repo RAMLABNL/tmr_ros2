@@ -52,8 +52,8 @@ ament_target_dependencies(tmrdriver
   rclcpp
 )
 
-ament_export_interfaces(export_tmrdriver HAS_LIBRARY_TARGET)
-#ament_export_targets(export_tmrdriver HAS_LIBRARY_TARGET)
+#ament_export_interfaces(export_tmrdriver HAS_LIBRARY_TARGET)
+ament_export_targets(export_tmrdriver HAS_LIBRARY_TARGET)
 
 #ament_export_dependencies(rclcpp)
 

@@ -59,7 +59,7 @@ ament_target_dependencies(tm_driver
   tm_msgs
 )
 
-ament_export_interfaces(export_tm_driver HAS_LIBRARY_TARGET)
+ament_export_targets(export_tm_driver HAS_LIBRARY_TARGET)
 
 install(
   DIRECTORY include/
