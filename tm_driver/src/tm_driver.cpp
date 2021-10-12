@@ -96,6 +96,22 @@ bool TmDriver::set_resume(const std::string &id)
 {
 	return (sct.send_script_str(id, TmCommand::set_resume()) == RC_OK);
 }
+bool TmDriver::change_tcp(const std::string &toolname, const std::string &id)
+{
+	return (sct.send_script_str(id, TmCommand::change_tcp(toolname)) == RC_OK);    
+}
+bool TmDriver::change_tcp(const std::vector<double> &tcp, const std::string &id)
+{
+	return (sct.send_script_str(id, TmCommand::change_tcp(tcp)) == RC_OK);
+}
+bool TmDriver::change_tcp(const std::vector<double> &tcp, double weight, const std::string &id)
+{
+	return (sct.send_script_str(id, TmCommand::change_tcp(tcp, weight)) == RC_OK);
+}
+bool TmDriver::change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia, const std::string &id)
+{
+	return (sct.send_script_str(id, TmCommand::change_tcp(tcp, weight, inertia)) == RC_OK);
+}
 bool TmDriver::set_io(TmIOModule module, TmIOType type, int pin, float state, const std::string &id)
 {
 	return (sct.send_script_str(id, TmCommand::set_io(module, type, pin, state)) == RC_OK);

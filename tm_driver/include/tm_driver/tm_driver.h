@@ -64,7 +64,12 @@ public:
 	bool set_pause(const std::string &id = "Pause");
 	bool set_resume(const std::string &id = "Resume");
 
-	//enum class IOModule { ControlBox, EndEffector };
+    bool change_tcp(const std::string &toolname, const std::string &id = "ChangeTCP");
+    bool change_tcp(const std::vector<double> &tcp, const std::string &id = "ChangeTCP");
+    bool change_tcp(const std::vector<double> &tcp, double weight, const std::string &id = "ChangeTCP");
+    bool change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia, const std::string &id = "ChangeTCP");
+    
+    //enum class IOModule { ControlBox, EndEffector };
 	//enum class IOType { DI, DO, InstantDO, AI, AO, InstantAO };
 	bool set_io(TmIOModule module, TmIOType type, int pin, float state, const std::string &id = "io");
 	bool set_joint_pos_PTP(const std::vector<double> &angs,

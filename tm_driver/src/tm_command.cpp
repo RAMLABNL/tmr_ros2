@@ -7,6 +7,41 @@
 #include <sstream>
 #include <iomanip>
 
+std::string TmCommand::change_tcp(const std::string &toolname)
+{
+	std::stringstream ss;
+	ss << "ChangeTCP(\"" << toolname << "\")";
+	return ss.str();
+}
+std::string TmCommand::change_tcp(const std::vector<double> &tcp)
+{
+	std::stringstream ss;
+	ss << "ChangeTCP(";
+    ss << tcp[0] << "," << tcp[1] << "," << tcp[2] << "," << deg(tcp[3]) << "," << deg(tcp[4])  << "," << deg(tcp[5]);
+    ss << ")";
+	return ss.str();
+}
+std::string TmCommand::change_tcp(const std::vector<double> &tcp, double weight)
+{
+	std::stringstream ss;
+	ss << "ChangeTCP(";
+    ss << tcp[0] << "," << tcp[1] << "," << tcp[2] << "," << deg(tcp[3]) << "," << deg(tcp[4])  << "," << deg(tcp[5]);
+    ss << "," << weight;
+    ss << ")";
+	return ss.str();
+}
+std::string TmCommand::change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia)
+{
+	std::stringstream ss;
+	ss << "ChangeTCP(";
+    ss << tcp[0] << "," << tcp[1] << "," << tcp[2] << "," << deg(tcp[3]) << "," << deg(tcp[4])  << "," << deg(tcp[5]);
+    ss << "," << weight;
+    ss << "," << inertia[0] << "," << inertia[1] << "," << inertia[2];
+    ss << "," << inertia[3] << "," << inertia[4] << "," << inertia[5];
+    ss << "," << deg(inertia[6]) << "," << deg(inertia[7]) << "," << deg(inertia[8]);
+    ss << ")";
+	return ss.str();
+}
 std::string TmCommand::set_tag(int tag, int wait)
 {
 	std::stringstream ss;

@@ -91,6 +91,13 @@ public:
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.5 */
 	static std::string set_resume() { return "Resume()"; }
 
+/*  Changing the TCP of the robot
+	More details please refer to the TM_Robot_Expression.pdf Chapter 8.14 */    
+    static std::string change_tcp(const std::string &toolname);
+    static std::string change_tcp(const std::vector<double> &tcp);
+    static std::string change_tcp(const std::vector<double> &tcp, double weight);
+    static std::string change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia);
+
 /*	Triggering IO high/low.
 	TmIOModule type: ControlBox, EndEffector 
 	TmIOType   type: DI, DO, InstantDO, AI, AO, InstantAO 
