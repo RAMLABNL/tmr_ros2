@@ -115,6 +115,23 @@ std::string TmCommand::set_tool_pose_Line(const std::vector<double> &pose,
 	return ss.str();
 }
 
+std::string TmCommand::set_tool_pose_Line_rel(const std::vector<double> &pose,
+	bool tool_frame,
+	double vel, double acc_time, int blend_percent, bool fine_goal, int precision)
+{
+	auto pose_mmdeg = mmdeg_pose(pose);
+	int vel_mm = int(1000.0 * vel);
+	int acct_ms = int(1000.0 * acc_time);
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(precision);
+	std::string frame = tool_frame ? "T" : "C";
+	ss << "Move_Line(\"" << frame << "AP\",";
+	for (auto &value : pose_mmdeg) { ss << value << ","; }
+	ss << vel_mm << "," << acct_ms << "," << blend_percent << ",";
+	ss << std::boolalpha << fine_goal << ")";
+	return ss.str();
+}
+
 std::string TmCommand::set_pvt_point(TmPvtMode mode,
 	double t, const std::vector<double> &pos, const std::vector<double> &vel, int precision)
 {

@@ -121,6 +121,12 @@ public:
 	static std::string set_tool_pose_Line(const std::vector<double> &pose,
 		double vel, double acc_time, int blend_percent, bool fine_goal, int precision = 5);
 
+/*	Linear relative motion with tool calculation.
+	More details please refer to the TM_Robot_Expression.pdf Chapter 9.11 */
+	static std::string set_tool_pose_Line_rel(const std::vector<double> &pose,
+		bool tool_frame,
+		double vel, double acc_time, int blend_percent, bool fine_goal, int precision = 5);
+
 /*	PVT start.
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.16 */
 	static std::string set_pvt_enter(int mode) { return "PVTEnter(" + std::to_string(mode) + ")"; }

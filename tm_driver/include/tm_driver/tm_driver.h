@@ -78,6 +78,9 @@ public:
 		double vel, double acc_time, int blend_percent, bool fine_goal = false, const std::string &id = "PTPT");
 	bool set_tool_pose_Line(const std::vector<double> &pose,
 		double vel, double acc_time, int blend_percent, bool fine_goal = false, const std::string &id = "Line");
+	bool set_tool_pose_Line_rel(const std::vector<double> &pose,
+		bool tool_frame,
+		double vel, double acc_time, int blend_percent, bool fine_goal = false, const std::string &id = "LineRel");
 	// set_tool_pose_PLINE
 
 	//
