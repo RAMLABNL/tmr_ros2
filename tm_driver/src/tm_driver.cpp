@@ -116,6 +116,7 @@ bool TmDriver::set_io(TmIOModule module, TmIOType type, int pin, float state, co
 {
 	return (sct.send_script_str(id, TmCommand::set_io(module, type, pin, state)) == RC_OK);
 }
+
 bool TmDriver::set_joint_pos_PTP(const std::vector<double> &angs,
 		double vel, double acc_time, int blend_percent, bool fine_goal, const std::string &id)
 {
@@ -125,6 +126,7 @@ bool TmDriver::set_joint_pos_PTP(const std::vector<double> &angs,
 		id, TmCommand::set_joint_pos_PTP(angs, vel_pa, acc_time, blend_percent, fine_goal)
 	) == RC_OK);
 }
+
 bool TmDriver::set_tool_pose_PTP(const std::vector<double> &pose,
 		double vel, double acc_time, int blend_percent, bool fine_goal, const std::string &id)
 {
@@ -133,11 +135,21 @@ bool TmDriver::set_tool_pose_PTP(const std::vector<double> &pose,
 		id, TmCommand::set_tool_pose_PTP(pose, vel_pa, acc_time, blend_percent, fine_goal)
 	) == RC_OK);
 }
+
 bool TmDriver::set_tool_pose_Line(const std::vector<double> &pose,
 		double vel, double acc_time, int blend_percent, bool fine_goal, const std::string &id)
 {
 	return (sct.send_script_str(
 		id, TmCommand::set_tool_pose_Line(pose, vel, acc_time, blend_percent, fine_goal)
+	) == RC_OK);
+}
+
+bool TmDriver::set_tool_pose_Line_rel(const std::vector<double> &pose,
+		bool tool_frame,
+		double vel, double acc_time, int blend_percent, bool fine_goal, const std::string &id)
+{
+	return (sct.send_script_str(
+		id, TmCommand::set_tool_pose_Line_rel(pose, tool_frame, vel, acc_time, blend_percent, fine_goal)
 	) == RC_OK);
 }
 
