@@ -80,8 +80,9 @@ public:
 	static std::string set_wait_tag(int tag, int timeout_ms = 0);
 
 /*	Stopping robot motion and clear buffer.
+	int priority: <0: no priority; 0, 1, 2: with priority
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.3 */
-	static std::string set_stop() { return "StopAndClearBuffer()"; }
+	static std::string set_stop(int priority = -1);
 
 /*	Pausing pjoject and robot motion.
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.4 */	

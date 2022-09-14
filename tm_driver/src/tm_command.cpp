@@ -54,6 +54,15 @@ std::string TmCommand::set_wait_tag(int tag, int timeout_ms)
 	ss << "WaitQueueTag(" << tag << "," << timeout_ms << ")";
 	return ss.str();
 }
+std::string TmCommand::set_stop(int priority)
+{
+	std::string prio_str;
+	if (priority >= 0)
+	{
+		prio_str = std::to_string(priority);
+	}
+	return "StopAndClearBuffer(" + prio_str + ")";
+}
 std::string TmCommand::set_io(TmIOModule module, TmIOType type, int pin, float state)
 {
 	static std::string io_module_name[] = { "ControlBox", "EndModule" };
