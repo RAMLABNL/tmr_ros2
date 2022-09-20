@@ -72,9 +72,9 @@ void TmDriver::halt()
 // SCT Robot Function (set_XXX)
 ////////////////////////////////
 
-bool TmDriver::script_exit(const std::string &id)
+bool TmDriver::script_exit(int priority, const std::string &id)
 {
-	return (sct.send_script_str(id, TmCommand::script_exit()) == RC_OK);
+	return (sct.send_script_str(id, TmCommand::script_exit(priority)) == RC_OK);
 }
 bool TmDriver::set_tag(int tag, int wait, const std::string &id)
 {

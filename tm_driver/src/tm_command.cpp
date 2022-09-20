@@ -42,6 +42,15 @@ std::string TmCommand::change_tcp(const std::vector<double> &tcp, double weight,
     ss << ")";
 	return ss.str();
 }
+std::string TmCommand::script_exit(int priority)
+{
+	std::string prio_str;
+	if (priority >= 0)
+	{
+		prio_str = std::to_string(priority);
+	}
+	return "ScriptExit(" + prio_str + ")";
+}
 std::string TmCommand::set_tag(int tag, int wait)
 {
 	std::stringstream ss;

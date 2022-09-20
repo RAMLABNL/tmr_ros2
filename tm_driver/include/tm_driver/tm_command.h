@@ -70,8 +70,9 @@ public:
 
 /* 
 	Leaving external control mode.
+	int priority: <0: no priority; 0, 1: with priority
 	More Detail please refer to the TM_Robot_Expression.pdf Chapter 8.2 */
-	static std::string script_exit() { return "ScriptExit()"; }
+	static std::string script_exit(int priority = -1);
 	
 //	More details please refer to the TM_Robot_Expression.pdf Chapter 9.1
 	static std::string set_tag(int tag, int wait = 0);
