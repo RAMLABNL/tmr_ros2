@@ -57,19 +57,19 @@ public:
 	// SCT Robot Function (set_XXX)
 	////////////////////////////////
 
-	bool script_exit(const std::string &id = "Exit");
+	bool script_exit(int priority = -1, const std::string &id = "Exit");
 	bool set_tag(int tag, int wait = 0, const std::string &id = "Tag");
 	bool set_wait_tag(int tag, int timeout_ms = 0, const std::string &id = "WaitTag");
-	bool set_stop(const std::string &id = "Stop");
+	bool set_stop(int priority = -1, const std::string &id = "Stop");
 	bool set_pause(const std::string &id = "Pause");
 	bool set_resume(const std::string &id = "Resume");
 
-    bool change_tcp(const std::string &toolname, const std::string &id = "ChangeTCP");
-    bool change_tcp(const std::vector<double> &tcp, const std::string &id = "ChangeTCP");
-    bool change_tcp(const std::vector<double> &tcp, double weight, const std::string &id = "ChangeTCP");
-    bool change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia, const std::string &id = "ChangeTCP");
-    
-    //enum class IOModule { ControlBox, EndEffector };
+	bool change_tcp(const std::string &toolname, const std::string &id = "ChangeTCP");
+	bool change_tcp(const std::vector<double> &tcp, const std::string &id = "ChangeTCP");
+	bool change_tcp(const std::vector<double> &tcp, double weight, const std::string &id = "ChangeTCP");
+	bool change_tcp(const std::vector<double> &tcp, double weight, const std::vector<double> &inertia, const std::string &id = "ChangeTCP");
+
+	//enum class IOModule { ControlBox, EndEffector };
 	//enum class IOType { DI, DO, InstantDO, AI, AO, InstantAO };
 	bool set_io(TmIOModule module, TmIOType type, int pin, float state, const std::string &id = "io");
 	bool set_joint_pos_PTP(const std::vector<double> &angs,
