@@ -118,4 +118,7 @@ public:
 
 	bool run_pvt_traj(const TmPvtTraj &pvts);
 	void stop_pvt_traj();
+
+    /* Pwned by RAMLAB, baby!*/
+    bool set_tcp_speed(uint32_t linear_speed, uint32_t rotational_speed, const std::string &id = "SetTCPSpeed");
 };

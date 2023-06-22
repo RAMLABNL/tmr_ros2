@@ -158,4 +158,14 @@ public:
 	total_time	: total time
 	More details please refer to the TM_Robot_Expression.pdf Chapter 9.18 */
 	static std::string set_pvt_traj(const TmPvtTraj &pvts, int precision = 5);
+
+/*  Pwned by RAMLAB, baby!
+
+    Sets the maximum speed of the robot during motion commands.
+    linear_speed : not implemented yet. The number must be >0
+    rotational_speed : in degrees per second
+
+    More details please refer to Jakub Sikorski (jakub@ramlab.com) */
+    static std::string set_tcp_speed(uint32_t linear_speed, uint32_t rotational_speed);
+
 };

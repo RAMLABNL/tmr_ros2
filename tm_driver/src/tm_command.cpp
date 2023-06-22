@@ -196,3 +196,10 @@ std::string TmCommand::set_pvt_traj(const TmPvtTraj &pvts, int precision)
 	ss << "PVTExit()";
 	return ss.str();
 }
+
+std::string TmCommand::set_tcp_speed(uint32_t linear_speed, uint32_t rotational_speed)
+{
+	std::stringstream ss;
+	ss << "SetTCPSpeed(" << linear_speed << "," << rotational_speed << ")";
+	return ss.str();
+}

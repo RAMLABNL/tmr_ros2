@@ -212,3 +212,11 @@ void TmDriver::stop_pvt_traj()
 	_is_executing_traj = false;
 	//set_stop();
 }
+
+bool TmDriver::set_tcp_speed(uint32_t linear_speed, uint32_t rotational_speed, const std::string &id)
+{
+    std::string script = TmCommand::set_tcp_speed(linear_speed, rotational_speed);
+	print_info("TM_DRV: send set tcp speed.:\n");
+	printf("%s\n", script.c_str());
+	return (sct.send_script_str(id, script) == RC_OK);
+}
