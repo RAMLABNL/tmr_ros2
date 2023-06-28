@@ -13,7 +13,7 @@ int main(int argc, char * argv[]){
       RCLCPP_ERROR(node->get_logger(), "Client interrupted while waiting for service to appear.");
       return 1;
     }
-    RCLCPP_INFO(node->get_logger(), "waiting for service...");
+    RCLCPP_INFO_STREAM(node->get_logger(), "waiting for service...");
   }
 
   auto request = std::make_shared<techman_robot_msgs::srv::TechmanRobotCommand::Request>();
